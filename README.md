@@ -35,7 +35,48 @@ O projeto foi estruturado para responder a três perguntas principais e realizar
 * **Lógica Técnica:** Utilizei **Subqueries** (subconsultas) para permitir que cada década tivesse seu próprio `LIMIT 10` de forma independente.
 * **Agrupamento Cronológico:** Apliquei a função `FLOOR(Year/10)*10` para normalizar anos individuais em blocos de décadas.
 * **Consolidação:** Usei o comando `UNION ALL` para empilhar os resultados e gerar um relatório único. 
-> *Nota: Optei por essa estrutura em vez de Window Functions (ROW_NUMBER) para explorar melhor Window Functions em outro projeto.*
+```
+SELECT * FROM (
+    SELECT FLOOR(Year/10)*10 AS Decada, Name, Platform, Global_Sales 
+    FROM Vendas
+    WHERE Year BETWEEN 1980 AND 1989 
+    ORDER BY Global_Sales DESC 
+    LIMIT 10) AS d80
+
+UNION ALL
+
+SELECT * FROM (
+    SELECT FLOOR(Year/10)*10 AS Decada, Name, Platform, Global_Sales 
+    FROM Vendas
+    WHERE Year BETWEEN 1990 AND 1999 
+    ORDER BY Global_Sales DESC 
+    LIMIT 10) AS d90
+    
+UNION ALL
+
+SELECT * FROM (
+    SELECT FLOOR(Year/10)*10 AS Decada, Name, Platform, Global_Sales 
+    FROM Vendas
+    WHERE Year BETWEEN 2000 AND 2009 
+    ORDER BY Global_Sales DESC 
+    LIMIT 10) AS d2000
+    
+UNION ALL
+
+SELECT * FROM (
+    SELECT FLOOR(Year/10)*10 AS Decada, Name, Platform, Global_Sales 
+    FROM Vendas
+    WHERE Year BETWEEN 2010 AND 2019 
+    ORDER BY Global_Sales DESC 
+    LIMIT 10) AS d2010
+
+--Obter as plataformas que mais venderam jogos
+SELECT Platform as Plataforma, SUM(Global_Sales) as Total_de_Vendas from Vendas
+    GROUP BY plataforma
+    HAVING Total_de_vendas > 275 
+    ORDER BY Total_de_vendas DESC
+```
+> *Nota: Optei por essa estrutura, usando o UNION ALL em vez de Window Functions (ROW_NUMBER) como seria o ideal para explorar melhor Window Functions em outro projeto.*
 
 ### 2. Filtro de Relevância: Plataformas com Maior Volume
 **Objetivo:** Analisar quais hardwares realmente dominaram o mercado global, ignorando plataformas de nicho ou baixo desempenho.
@@ -43,11 +84,31 @@ O projeto foi estruturado para responder a três perguntas principais e realizar
 * **Lógica Técnica:** Além da agregação simples com `SUM`, utilizei a cláusula **`HAVING`**.
 * **Critério de Sucesso:** O filtro `Total_de_vendas > 275` foi aplicado para garantir que apenas consoles com alto impacto histórico fossem listados.
 
+```
+SELECT Platform as Plataforma, SUM(Global_Sales) as Total_de_Vendas from Vendas
+    GROUP BY plataforma
+    HAVING Total_de_vendas > 275 
+    ORDER BY Total_de_vendas DESC
+```
+
 ### 3. Market Share: Vendas Regionais e Percentuais
-**Objetivo:** Compreender a relevância de cada mercado e como essa fatia de mercado mudou com o passar das décadas.
+**Objetivo:** Compreender a relevância de cada mercado e como eles mudaram com o passar das décadas.
 
 * **Lógica Técnica:** Realizei cálculos matemáticos dentro do `SELECT` para gerar a participação percentual de cada região em relação ao total global.
 * **Formatação:** Utilizei as funções **`ROUND`** para precisão decimal e o operador de concatenação **`|| '%'`** para entregar os dados formatados para leitura direta.
+
+```
+SELECT 
+    (Year / 10) * 10 AS Década,
+    SUM(NA_Sales) AS América_do_Norte, ROUND((SUM(NA_Sales)/SUM(Global_Sales))*100.0, 2) || '%' as Per_NA,
+    SUM(JP_Sales) AS Japão, ROUND((SUM(JP_Sales)/SUM(Global_Sales))*100.0, 2) || '%' as Per_JP,
+    SUM(EU_Sales) AS Europa, ROUND((SUM(EU_Sales)/SUM(Global_Sales))*100.0, 2) || '%' as Per_EU,
+    SUM(Other_Sales) AS Outros, ROUND((SUM(Other_Sales)/SUM(Global_Sales))*100.0, 2) || '%' as Per_OU,
+    SUM(Global_Sales) AS Global from Vendas
+    WHERE Year BETWEEN 1979 AND 2019
+    GROUP BY Década
+    ORDER BY Década ASC
+```
 
 ### 4. Análise Direcionada: Top 5 Consoles Históricos
 **Objetivo:** Extrair a biblioteca completa de jogos das cinco plataformas líderes (PS2, X360, PS3, Wii, DS).
@@ -55,13 +116,18 @@ O projeto foi estruturado para responder a três perguntas principais e realizar
 * **Lógica Técnica:** Utilizei o operador **`IN`** para filtragem múltipla e eficiente.
 * **Ordenação Customizada:** Apliquei a estrutura **`ORDER BY CASE`**, técnica que permite definir uma ordem de exibição manual, garantindo que os dados sejam apresentados na hierarquia de importância definida pela análise.
 
-<?-- Lembrete para mim mesmo, como mostrar blocos de código:
-
-```sql
---SELECT Name, Global_Sales 
-//FROM Vendas 
-//WHERE Year = 2010;
-//```?>
+```
+SELECT 
+    Rank, Platform, Name, Year, Genre, Publisher, NA_Sales, EU_Sales, JP_Sales, Other_Sales, Global_Sales from Vendas
+    WHERE Platform IN ('PS2', 'X360', 'PS3', 'Wii', 'DS')
+    ORDER BY CASE platform 
+        WHEN 'PS2' THEN 1
+        WHEN 'X360' THEN 2
+        WHEN 'PS3' THEN 3
+        WHEN'Wii' THEN 4
+        WHEN'DS' THEN 5
+        END
+```
 
 
 
