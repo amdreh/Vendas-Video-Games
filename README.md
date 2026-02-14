@@ -1,4 +1,3 @@
-<?Este arquivo ainda será revisado, e incluirei os códigos das queries e os prints dos retornos delas.?>
 # 🎮 Análise de Dados: Mercado Global de Games (SQL)
 
 Neste projeto, apresento as queries que elaborei para transformar dados brutos em informações estratégicas sobre a indústria dos games ao longo de sua história.
@@ -70,16 +69,22 @@ SELECT * FROM (
     ORDER BY Global_Sales DESC 
     LIMIT 10) AS d2010
 
---Obter as plataformas que mais venderam jogos
-SELECT Platform as Plataforma, SUM(Global_Sales) as Total_de_Vendas from Vendas
-    GROUP BY plataforma
-    HAVING Total_de_vendas > 275 
-    ORDER BY Total_de_vendas DESC
+> [Nota: Optei por essa estrutura, utilizando repetidamente UNION ALL em vez de Window Functions (ROW_NUMBER).
+O ideal seria utilizar Window Functions, mas farei isso em outro projeto.]
 ```
-> *Nota: Optei por essa estrutura, usando o UNION ALL em vez de Window Functions (ROW_NUMBER) como seria o ideal para explorar melhor Window Functions em outro projeto.*
+
+| Decada | Name | Platform | Global_Sales |
+| :--- | :--- | :--- | ---: |
+| 1980 | Super Mario Bros. | NES | 40.24 |
+| 1980 | Tetris | GB | 30.26 |
+| 1980 | Duck Hunt | NES | 28.31 |
+| 1980 | Super Mario Land | GB | 18.14 |
+| 1980 | Super Mario Bros. 3 | NES | 17.28 |
+
+[Tabela completa aqui](https://github.com/amdreh/Vendas-Video-Games/blob/main/exports/top%2010%20jogos%20por%20década.csv)
 
 ### 2. Filtro de Relevância: Plataformas com Maior Volume
-**Objetivo:** Analisar quais hardwares realmente dominaram o mercado global, ignorando plataformas de nicho ou baixo desempenho.
+**Objetivo:** Analisar quais hardwares dominaram o mercado global com as maiores vendas de consoles, ignorando assim plataformas de nicho ou baixo desempenho.
 
 * **Lógica Técnica:** Além da agregação simples com `SUM`, utilizei a cláusula **`HAVING`**.
 * **Critério de Sucesso:** O filtro `Total_de_vendas > 275` foi aplicado para garantir que apenas consoles com alto impacto histórico fossem listados.
@@ -90,6 +95,16 @@ SELECT Platform as Plataforma, SUM(Global_Sales) as Total_de_Vendas from Vendas
     HAVING Total_de_vendas > 275 
     ORDER BY Total_de_vendas DESC
 ```
+
+| Plataforma | Total_de_Vendas |
+| :--- | ---: |
+| PS2 | 1255.64 |
+| X360 | 979.96 |
+| PS3 | 957.84 |
+| Wii | 926.71 |
+| DS | 822.49 |
+
+[Tabela completa aqui](https://github.com/amdreh/Vendas-Video-Games/blob/main/exports/plataformas%20que%20mais%20venderam%20jogos.csv)
 
 ### 3. Market Share: Vendas Regionais e Percentuais
 **Objetivo:** Compreender a relevância de cada mercado e como eles mudaram com o passar das décadas.
@@ -109,6 +124,12 @@ SELECT
     GROUP BY Década
     ORDER BY Década ASC
 ```
+| Década | América_do_Norte | Per_NA | Japão | Per_JP | Europa | Per_EU | Outros | Per-OU | Global |
+| :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1980 | 235.66 | 62.58% | 102.49 | 27.22% | 31.2 | 8.29% | 7.13 | 1.89% | 376.58 |
+| 1990 | 576.11 | 45.05% | 372.33 | 29.11% | 282.87 | 22.12% | 47.42 | 3.71% | 1278.91 |
+| 2000 | 2408.91 | 51.87% | 510.69 | 11.0% | 1256.18 | 27.05% | 464.73 | 10.01% | 4644.02 |
+| 2010 | 1112.48 | 44.14% | 298.79 | 11.85% | 838.87 | 33.28% | 269.71 | 10.7% | 2520.56 |
 
 ### 4. Análise Direcionada: Top 5 Consoles Históricos
 **Objetivo:** Extrair a biblioteca completa de jogos das cinco plataformas líderes (PS2, X360, PS3, Wii, DS).
@@ -128,6 +149,13 @@ SELECT
         WHEN'DS' THEN 5
         END
 ```
+| Rank | Platform | Name | Year | Genre | Publisher | NA_Sales | EU_Sales | JP_Sales | Other_Sales | Global |
+| :--- | :--- | :--- | :--- | :--- | :--- | ---: | ---: | ---: | ---: | ---: |
+| 18 | PS2 | Grand Theft Auto: San Andreas | 2004 | Action | Take-Two Interactive | 9.43 | 0.4 | 0.41 | 10.57 | 20.81 |
+| 25 | PS2 | Grand Theft Auto: Vice City | 2002 | Action | Take-Two Interactive | 8.41 | 5.49 | 0.47 | 1.78 | 16.15 |
+| 29 | PS2 | Gran Turismo 3: A-Spec | 2001 | Racing | Sony Computer Entertainment | 6.85 | 5.09 | 1.87 | 1.16 | 14.98 |
+| 39 | PS2 | Grand Theft Auto III | 2001 | Action | Take-Two Interactive | 6.99 | 4.51 | 0.3 | 1.3 | 13.1 |
+| 48 | PS2 | Gran Turismo 4 | 2004 | Racing | Sony Computer Entertainment | 3.01 | 0.01 | 1.1 | 7.53 | 11.66 |
 
-
+[Tabela completa aqui](https://github.com/amdreh/Vendas-Video-Games/blob/main/exports/jogos%20por%20plataforma%20mais%20vendida.csv)
 
