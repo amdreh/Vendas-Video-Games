@@ -1,37 +1,39 @@
 --Query para obter os 10 jogos mais vendidos por década 
 SELECT * FROM (
-    SELECT FLOOR(Year/10)*10 AS Decada, Name, Platform, Global_Sales 
+    SELECT FLOOR(Year/10)*10 AS Decade, Year, Name, Platform, Global_Sales 
     FROM Vendas
-    WHERE Year BETWEEN 1980 AND 1989 
+    --WHERE Year BETWEEN 2010 AND 2019 
+    --Poderia ter usado a linha acima, mas ela daria erro, pois a coluna Year (ano) seria interpretada como texto. O CAST foi usado para converter o ano em Year de texto para um número.
+    WHERE CAST(Year AS INTEGER) BETWEEN 1980 AND 1989 
     ORDER BY Global_Sales DESC 
     LIMIT 10) AS d80
 
 UNION ALL
 
 SELECT * FROM (
-    SELECT FLOOR(Year/10)*10 AS Decada, Name, Platform, Global_Sales 
+    SELECT FLOOR(Year/10)*10 AS Decade, Year, Name, Platform, Global_Sales  
     FROM Vendas
-    WHERE Year BETWEEN 1990 AND 1999 
+    WHERE CAST(Year AS INTEGER) BETWEEN 1990 AND 1999 
     ORDER BY Global_Sales DESC 
     LIMIT 10) AS d90
     
 UNION ALL
 
 SELECT * FROM (
-    SELECT FLOOR(Year/10)*10 AS Decada, Name, Platform, Global_Sales 
+    SELECT FLOOR(Year/10)*10 AS Decade, Year, Name, Platform, Global_Sales  
     FROM Vendas
-    WHERE Year BETWEEN 2000 AND 2009 
+    WHERE CAST(Year AS INTEGER) BETWEEN 2000 AND 2009 
     ORDER BY Global_Sales DESC 
     LIMIT 10) AS d2000
     
 UNION ALL
 
 SELECT * FROM (
-    SELECT FLOOR(Year/10)*10 AS Decada, Name, Platform, Global_Sales 
+    SELECT FLOOR(Year/10)*10 AS Decade, Year, Name, Platform, Global_Sales  
     FROM Vendas
-    WHERE Year BETWEEN 2010 AND 2019 
+    WHERE CAST(Year AS INTEGER) BETWEEN 2010 AND 2019 
     ORDER BY Global_Sales DESC 
-    LIMIT 10) AS d2010
+    LIMIT 10) AS d2010;
 
 --Obter as plataformas que mais venderam jogos
 SELECT Platform as Plataforma, SUM(Global_Sales) as Total_de_Vendas from Vendas
