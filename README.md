@@ -73,13 +73,13 @@ SELECT * FROM (
 O ideal seria utilizar Window Functions, mas farei isso em outro projeto.]
 ```
 
-| Decada | Name | Platform | Global_Sales |
-| :--- | :--- | :--- | ---: |
-| 1980 | Super Mario Bros. | NES | 40.24 |
-| 1980 | Tetris | GB | 30.26 |
-| 1980 | Duck Hunt | NES | 28.31 |
-| 1980 | Super Mario Land | GB | 18.14 |
-| 1980 | Super Mario Bros. 3 | NES | 17.28 |
+| Decada | Ano | Nome | Platforma | Venda Global |
+| :--- | :--- | :--- | :--- | ---: |
+| 1980 | 1982 | Pac-Man | 2600 | 7.81 |
+| 1980 | 1988 | Super Mario Bros. 2 | NES | 7.46 |
+| 1980 | 1986 | The Legend of Zelda | NES | 6.51 |
+| 1980 | 1988 | Tetris | NES | 5.58 |
+| 1980 | 1989 | Dr. Mario | GB | 5.34 |
 
 [Tabela completa aqui](https://github.com/amdreh/Vendas-Video-Games/blob/main/exports/top%2010%20jogos%20por%20década.csv)
 
@@ -96,7 +96,7 @@ SELECT Platform as Plataforma, SUM(Global_Sales) as Total_de_Vendas from Vendas
     ORDER BY Total_de_vendas DESC
 ```
 
-| Plataforma | Total_de_Vendas |
+| Plataforma | Venda Total |
 | :--- | ---: |
 | PS2 | 1255.64 |
 | X360 | 979.96 |
@@ -124,7 +124,7 @@ SELECT
     GROUP BY Década
     ORDER BY Década ASC
 ```
-| Década | América_do_Norte | Per_NA | Japão | Per_JP | Europa | Per_EU | Outros | Per-OU | Global |
+| Década | América do Norte | % NA | Japão |  % JP | Europa | % EU | Outros | % OU | Global |
 | :--- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 1980 | 235.66 | 62.58% | 102.49 | 27.22% | 31.2 | 8.29% | 7.13 | 1.89% | 376.58 |
 | 1990 | 576.11 | 45.05% | 372.33 | 29.11% | 282.87 | 22.12% | 47.42 | 3.71% | 1278.91 |
@@ -149,7 +149,7 @@ SELECT
         WHEN'DS' THEN 5
         END
 ```
-| Rank | Platform | Name | Year | Genre | Publisher | NA_Sales | EU_Sales | JP_Sales | Other_Sales | Global |
+| Rank | Platforma | Nome | Ano | Gênero | Publisher | Venda NA | Venda EU | Venda JP | Venda Outros | Venda Global |
 | :--- | :--- | :--- | :--- | :--- | :--- | ---: | ---: | ---: | ---: | ---: |
 | 18 | PS2 | Grand Theft Auto: San Andreas | 2004 | Action | Take-Two Interactive | 9.43 | 0.4 | 0.41 | 10.57 | 20.81 |
 | 25 | PS2 | Grand Theft Auto: Vice City | 2002 | Action | Take-Two Interactive | 8.41 | 5.49 | 0.47 | 1.78 | 16.15 |
