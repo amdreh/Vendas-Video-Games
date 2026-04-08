@@ -81,7 +81,7 @@ O ideal seria utilizar Window Functions, mas farei isso em outro projeto.]
 | 1980 | 1988 | Tetris | NES | 5.58 |
 | 1980 | 1989 | Dr. Mario | GB | 5.34 |
 
-[Tabela completa aqui](https://github.com/amdreh/Vendas-Video-Games/blob/main/exports/top%2010%20jogos%20por%20década.csv)
+[Tabela completa aqui](https://github.com/amdreh/Vendas-Video-Games/blob/main/exports/top_10_jogos_por_decada.csv)
 
 ### 2. Filtro de Relevância: Plataformas com Maior Volume
 **Objetivo:** Analisar quais hardwares dominaram o mercado global com as maiores vendas de consoles, ignorando assim plataformas de nicho ou baixo desempenho.
